@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KBstreamings – O Streaming que Funciona</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #4ade80;
+    --green-dim: rgba(34,197,94,0.15);
+    --green-border: rgba(34,197,94,0.3);
+    --purple: #c084fc;
+    --purple-dim: rgba(168,85,247,0.15);
+    --purple-border: rgba(168,85,247,0.3);
+    --bg: #08090f;
+    --card: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+    --text: rgba(255,255,255,0.75);
+    --muted: rgba(255,255,255,0.35);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+
+  body {
+    background: var(--bg);
+    color: #fff;
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    display: flex; align-items:center; justify-content:space-between;
+    padding: 16px 40px;
+    background: rgba(8,9,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:22px; letter-spacing:4px;
+    color: rgba(255,255,255,0.4);
+  }
+  .nav-logo span { color:#fff; }
+  .nav-cta {
+    display:flex; align-items:center; gap:8px;
+    padding:9px 20px; border-radius:100px;
+    font-size:12px; font-weight:700; letter-spacing:0.5px;
+    text-decoration:none;
+    background: var(--green-dim); color: var(--green);
+    border:1px solid var(--green-border);
+    transition: transform 0.15s;
+  }
+  .nav-cta:hover { transform:scale(1.04); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding: 120px 24px 80px;
+    position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:'';
+    position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+    width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 65%);
+    pointer-events:none;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 16px; border-radius:100px;
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:24px;
+    background: var(--green-dim); color: var(--green);
+    border:1px solid var(--green-border);
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .hero h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(56px, 10vw, 96px);
+    line-height:0.9; letter-spacing:2px;
+    animation: fadeUp 0.6s 0.1s ease forwards;
+    opacity:0; transform:translateY(30px);
+  }
+  .hero h1 .hl { color: var(--green); }
+  .hero p {
+    font-size:clamp(15px,2vw,18px);
+    color: var(--text); max-width:500px;
+    margin:20px auto 36px; line-height:1.6; font-weight:300;
+    animation: fadeUp 0.6s 0.2s ease forwards;
+    opacity:0; transform:translateY(30px);
+  }
+  .hero-btns {
+    display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+    animation: fadeUp 0.6s 0.3s ease forwards;
+    opacity:0; transform:translateY(30px);
+  }
+  .btn-primary {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 30px; border-radius:100px;
+    font-size:14px; font-weight:700; letter-spacing:0.5px;
+    text-decoration:none; transition:transform 0.15s, box-shadow 0.15s;
+    background:var(--green); color:#000;
+  }
+  .btn-primary:hover { transform:scale(1.04); box-shadow:0 0 30px rgba(34,197,94,0.3); }
+  .btn-secondary {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 30px; border-radius:100px;
+    font-size:14px; font-weight:700; letter-spacing:0.5px;
+    text-decoration:none; transition:transform 0.15s;
+    background: rgba(255,255,255,0.06); color:#fff;
+    border:1px solid var(--border);
+  }
+  .btn-secondary:hover { transform:scale(1.04); background:rgba(255,255,255,0.09); }
+
+  .hero-stats {
+    display:flex; gap:40px; flex-wrap:wrap; justify-content:center;
+    margin-top:60px;
+    animation: fadeUp 0.6s 0.4s ease forwards;
+    opacity:0; transform:translateY(30px);
+  }
+  .stat { text-align:center; }
+  .stat h3 { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--green); letter-spacing:1px; }
+  .stat p  { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  /* ── SEÇÃO GENÉRICA ── */
+  section { padding:80px 24px; max-width:1000px; margin:0 auto; }
+  .section-tag {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:5px 14px; border-radius:100px;
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:16px;
+  }
+  .tag-green  { background:var(--green-dim);  color:var(--green);  border:1px solid var(--green-border); }
+  .tag-purple { background:var(--purple-dim); color:var(--purple); border:1px solid var(--purple-border); }
+  .tag-blue   { background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.3); }
+  .tag-yellow { background:rgba(234,179,8,0.15); color:#facc15; border:1px solid rgba(234,179,8,0.3); }
+
+  .section-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(36px,6vw,56px); line-height:1;
+    margin-bottom:8px;
+  }
+  .section-sub {
+    font-size:15px; color:var(--text); font-weight:300;
+    max-width:500px; line-height:1.6; margin-bottom:48px;
+  }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:16px;
+  }
+  .feature-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:24px;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .feature-card:hover { background:rgba(255,255,255,0.05); border-color:var(--green-border); }
+  .feature-icon { font-size:28px; margin-bottom:12px; }
+  .feature-card h4 { font-size:15px; font-weight:700; margin-bottom:6px; }
+  .feature-card p  { font-size:13px; color:var(--text); line-height:1.5; }
+
+  /* ── PLANOS ── */
+  .plans-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:20px;
+  }
+  .plan-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:28px;
+    display:flex; flex-direction:column; gap:16px;
+    position:relative; overflow:hidden;
+    transition:transform 0.2s, border-color 0.2s;
+  }
+  .plan-card:hover { transform:translateY(-4px); }
+  .plan-card.featured {
+    background:linear-gradient(145deg, rgba(34,197,94,0.08), rgba(34,197,94,0.03));
+    border-color:var(--green-border);
+  }
+  .plan-popular {
+    position:absolute; top:16px; right:16px;
+    background:var(--green); color:#000;
+    font-size:10px; font-weight:800; letter-spacing:1px;
+    padding:3px 10px; border-radius:100px; text-transform:uppercase;
+  }
+  .plan-name { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; font-weight:600; }
+  .plan-price {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:56px; line-height:1; letter-spacing:-1px;
+  }
+  .plan-price sup { font-size:20px; vertical-align:super; opacity:0.7; }
+  .plan-price span { font-size:16px; opacity:0.5; font-family:'Barlow',sans-serif; font-weight:300; }
+  .plan-save {
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--green-dim); color:var(--green);
+    border:1px solid var(--green-border);
+    font-size:11px; font-weight:700; padding:3px 10px;
+    border-radius:100px; width:fit-content;
+  }
+  .plan-divider { height:1px; background:var(--border); }
+  .plan-features { display:flex; flex-direction:column; gap:8px; }
+  .plan-feature { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text); }
+  .plan-feature .check { color:var(--green); font-size:14px; }
+  .plan-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:0.5px;
+    text-decoration:none; transition:transform 0.15s, opacity 0.15s;
+    margin-top:auto;
+  }
+  .plan-btn:hover { transform:scale(1.03); opacity:0.9; }
+  .plan-btn-outline { background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--border); }
+  .plan-btn-solid   { background:var(--green); color:#000; }
+
+  /* ── DEPOIMENTOS ── */
+  .reviews-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:16px;
+  }
+  .review-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:24px;
+    display:flex; flex-direction:column; gap:12px;
+    transition:border-color 0.2s;
+  }
+  .review-card:hover { border-color:var(--purple-border); }
+  .review-stars { color:#facc15; font-size:14px; letter-spacing:2px; }
+  .review-text { font-size:14px; color:var(--text); line-height:1.6; font-style:italic; }
+  .review-author { display:flex; align-items:center; gap:10px; margin-top:auto; }
+  .review-avatar {
+    width:36px; height:36px; border-radius:50%;
+    background:linear-gradient(135deg, var(--green-dim), var(--purple-dim));
+    border:1px solid var(--green-border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700;
+  }
+  .review-name { font-size:13px; font-weight:700; }
+  .review-plan { font-size:11px; color:var(--muted); }
+
+  /* ── FAQ ── */
+  .faq-list { display:flex; flex-direction:column; gap:10px; }
+  .faq-item {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; overflow:hidden;
+    transition:border-color 0.2s;
+  }
+  .faq-item:hover { border-color:var(--green-border); }
+  .faq-question {
+    width:100%; background:none; border:none; color:#fff;
+    font-family:'Barlow',sans-serif; font-size:14px; font-weight:600;
+    padding:18px 20px; text-align:left; cursor:pointer;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .faq-icon { color:var(--green); font-size:18px; flex-shrink:0; transition:transform 0.3s; }
+  .faq-answer {
+    max-height:0; overflow:hidden;
+    transition:max-height 0.35s ease, padding 0.3s;
+    font-size:14px; color:var(--text); line-height:1.6;
+    padding:0 20px;
+  }
+  .faq-item.open .faq-answer { max-height:200px; padding:0 20px 18px; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    text-align:center; padding:80px 24px 100px;
+    position:relative; overflow:hidden;
+  }
+  .cta-section::before {
+    content:'';
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:500px; height:500px; border-radius:50%;
+    background:radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 65%);
+    pointer-events:none;
+  }
+  .cta-section h2 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(40px,7vw,72px); line-height:1;
+    margin-bottom:16px; position:relative; z-index:1;
+  }
+  .cta-section h2 .hl { color:var(--green); }
+  .cta-section p {
+    font-size:16px; color:var(--text); margin-bottom:36px;
+    position:relative; z-index:1; font-weight:300;
+  }
+  .cta-section .hero-btns { position:relative; z-index:1; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top:1px solid var(--border);
+    padding:24px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px;
+  }
+  footer .nav-logo { font-size:16px; }
+  footer p { font-size:12px; color:var(--muted); }
+
+  /* ── WHATSAPP FLOAT ── */
+  .wpp-float {
+    position:fixed; bottom:28px; right:28px; z-index:200;
+    width:56px; height:56px; border-radius:50%;
+    background:#25d366; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; text-decoration:none;
+    box-shadow:0 4px 20px rgba(37,211,102,0.4);
+    transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .wpp-float:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(37,211,102,0.5); }
+
+  /* ── DIVIDER ── */
+  .divider { height:1px; background:var(--border); max-width:1000px; margin:0 auto; }
+
+  @media(max-width:600px) {
+    nav { padding:14px 20px; }
+    .hero-stats { gap:24px; }
+    footer { flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo"><span>KB</span>streamings</div>
+  <a class="nav-cta" href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Quero%20assinar%20o%20KBstreamings!%20Pode%20me%20ajudar%3F" target="_blank">
+    📲 Assinar agora
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">✦ O streaming que funciona</div>
+  <h1>O ENTRETENIMENTO<br>QUE VOCÊ <span class="hl">MERECE</span></h1>
+  <p>Canais ao vivo, filmes e séries com qualidade superior por um preço que cabe no seu bolso.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Quero%20fazer%20o%20teste%20gr%C3%A1tis%20do%20KBstreamings!">🎁 Teste grátis agora</a>
+    <a class="btn-secondary" href="#planos">Ver planos</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><h3>500+</h3><p>Clientes satisfeitos</p></div>
+    <div class="stat"><h3>99%</h3><p>Uptime garantido</p></div>
+    <div class="stat"><h3>24h</h3><p>Suporte dedicado</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section>
+  <div class="section-tag tag-green">✦ Por que nos escolher</div>
+  <div class="section-title">TUDO QUE VOCÊ PRECISA<br>EM UM SÓ LUGAR</div>
+  <p class="section-sub">Sem complicação. Assine, receba seu acesso e comece a assistir em minutos.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📺</div>
+      <h4>Conteúdo Completo</h4>
+      <p>Canais ao vivo, filmes, séries e muito mais em um único acesso.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h4>Todos os Dispositivos</h4>
+      <p>Celular, Smart TV, tablet e computador. Assista onde quiser.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h4>Alta Qualidade</h4>
+      <p>Imagem nítida e sem travamentos para sua melhor experiência.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h4>Suporte Rápido</h4>
+      <p>Atendimento ágil pelo WhatsApp para resolver qualquer dúvida.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h4>Preço Justo</h4>
+      <p>Planos acessíveis para todos os bolsos. A partir de R$30/mês.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎁</div>
+      <h4>Teste Grátis</h4>
+      <p>Experimente antes de assinar. Sem compromisso e sem cartão.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PLANOS -->
+<section id="planos">
+  <div class="section-tag tag-green">📦 Planos</div>
+  <div class="section-title">ESCOLHA O PLANO<br>IDEAL PARA VOCÊ</div>
+  <p class="section-sub">Quanto mais tempo, mais você economiza. Sem taxa de adesão!</p>
+  <div class="plans-grid">
+
+    <div class="plan-card">
+      <div class="plan-name">Mensal</div>
+      <div class="plan-price" style="color:#818cf8;"><sup>R$</sup>30<span>/mês</span></div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> Acesso completo por 30 dias</div>
+        <div class="plan-feature"><span class="check">✓</span> Todos os dispositivos</div>
+        <div class="plan-feature"><span class="check">✓</span> Suporte via WhatsApp</div>
+        <div class="plan-feature"><span class="check">✓</span> Ativação imediata</div>
+      </div>
+      <a class="plan-btn plan-btn-outline"
+        href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Quero%20contratar%20o%20plano%20Mensal%20de%20R%2430%2C00!"
+        target="_blank">📲 Quero esse plano</a>
+    </div>
+
+    <div class="plan-card featured">
+      <div class="plan-popular">Mais popular</div>
+      <div class="plan-name">Trimestral</div>
+      <div class="plan-price" style="color:var(--green);"><sup>R$</sup>80<span>/3 meses</span></div>
+      <div class="plan-save">🎉 Economize R$10</div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> Acesso completo por 90 dias</div>
+        <div class="plan-feature"><span class="check">✓</span> Todos os dispositivos</div>
+        <div class="plan-feature"><span class="check">✓</span> Suporte via WhatsApp</div>
+        <div class="plan-feature"><span class="check">✓</span> Ativação imediata</div>
+        <div class="plan-feature"><span class="check">✓</span> Prioridade no suporte</div>
+      </div>
+      <a class="plan-btn plan-btn-solid"
+        href="https://wa.me/5531984177661?text=Ol%C3%A1%21%20Quero%20contratar%20o%20plano%20Trimestral%20de%20R%2480%2C00!"
+        target="_blank">📲 Quero esse plano</a>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-name">Semestral</div>
+      <div class="plan-price" style="color:#fb923c;"><sup>R$</sup>150<span>/6 meses</span></div>
+      <div class="plan-save">🎉 Economize R$30</div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> Acesso completo por 180 dias</div>
+        <div class="plan-feature"><span class="check">✓</span> Todos os dispositivos</div>
+        <div class="plan-feature"><span class="check">✓</span> Suporte via WhatsApp</div>
+        <div class="plan-feature"><span class="check">✓</span> Ativação imediata</div>
+        <div class="plan-feature"><span class="check">✓</span> Prioridade no suporte</div>
+        <div class="plan-feature"><span class="check">✓</span> Melhor custo-benefício</div>
+      </div>
+      <a class="plan-btn plan-btn-outline"
+        href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Quero%20contratar%20o%20plano%20Semestral%20de%20R%24150%2C00!"
+        target="_blank">📲 Quero esse plano</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DEPOIMENTOS -->
+<section>
+  <div class="section-tag tag-purple">⭐ Depoimentos</div>
+  <div class="section-title">O QUE NOSSOS CLIENTES<br>ESTÃO DIZENDO</div>
+  <p class="section-sub">Mais de 500 clientes satisfeitos. Veja o que eles falam!</p>
+  <div class="reviews-grid">
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Melhor investimento que fiz! Qualidade incrível e preço justo. Recomendo para todo mundo!"</div>
+      <div class="review-author">
+        <div class="review-avatar">M</div>
+        <div>
+          <div class="review-name">Marcos Silva</div>
+          <div class="review-plan">Plano Semestral</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Cancelei a Netflix e assino o KBstreamings há 4 meses. Economizo e tenho muito mais conteúdo!"</div>
+      <div class="review-author">
+        <div class="review-avatar">A</div>
+        <div>
+          <div class="review-name">Ana Paula</div>
+          <div class="review-plan">Plano Trimestral</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Atendimento super rápido e o serviço funciona muito bem. Sem travamentos e ótima qualidade!"</div>
+      <div class="review-author">
+        <div class="review-avatar">R</div>
+        <div>
+          <div class="review-name">Rafael Costa</div>
+          <div class="review-plan">Plano Mensal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Fiz o teste grátis e já assinei na hora! Vale muito a pena. Toda a família usa e aprova!"</div>
+      <div class="review-author">
+        <div class="review-avatar">J</div>
+        <div>
+          <div class="review-name">Juliana Mendes</div>
+          <div class="review-plan">Plano Semestral</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Indiquei pra minha família toda. Todo mundo assinou e ninguém se arrependeu. Ótimo serviço!"</div>
+      <div class="review-author">
+        <div class="review-avatar">P</div>
+        <div>
+          <div class="review-name">Pedro Alves</div>
+          <div class="review-plan">Plano Trimestral</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"Suporte nota 10! Tive um problema e foi resolvido em minutos. Muito profissional!"</div>
+      <div class="review-author">
+        <div class="review-avatar">C</div>
+        <div>
+          <div class="review-name">Carla Ribeiro</div>
+          <div class="review-plan">Plano Mensal</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section>
+  <div class="section-tag tag-blue">❓ Dúvidas</div>
+  <div class="section-title">PERGUNTAS<br>FREQUENTES</div>
+  <p class="section-sub">Tire suas dúvidas antes de assinar.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Como funciona o serviço?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">Após a assinatura, você recebe os dados de acesso imediatamente pelo WhatsApp. É só instalar o aplicativo indicado e começar a assistir em qualquer dispositivo!</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Em quais dispositivos funciona?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">Funciona em celular (Android e iPhone), Smart TV, computador, notebook, tablet, Fire Stick e TV Box. Praticamente qualquer dispositivo com internet!</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Como é feito o pagamento?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">O pagamento é feito via PIX. Após a confirmação do pagamento, seu acesso é ativado na hora e os dados enviados pelo WhatsApp.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Tem teste grátis?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">Sim! Oferecemos teste grátis para você conhecer o serviço antes de assinar. Entre em contato pelo WhatsApp e solicite o seu!</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        O que acontece se travar ou der problema?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">Nossa equipe de suporte está disponível pelo WhatsApp para resolver qualquer problema rapidamente. A maioria dos problemas é resolvida em minutos!</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-section">
+  <h2>PRONTO PARA<br><span class="hl">COMEÇAR?</span></h2>
+  <p>Junte-se a mais de 500 clientes satisfeitos. Teste grátis disponível!</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Quero%20fazer%20o%20teste%20gr%C3%A1tis%20do%20KBstreamings!" target="_blank">🎁 Quero meu teste grátis</a>
+    <a class="btn-secondary" href="#planos">Ver planos</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="nav-logo"><span>KB</span>streamings</div>
+  <p>© 2025 KBstreamings. Todos os direitos reservados.</p>
+  <p style="font-size:12px;color:rgba(255,255,255,0.2);">(31) 98417-7161</p>
+</footer>
+
+<!-- WHATSAPP FLUTUANTE -->
+<a class="wpp-float" href="https://wa.me/5531984177161?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20KBstreamings!" target="_blank" title="Falar no WhatsApp">💬</a>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
